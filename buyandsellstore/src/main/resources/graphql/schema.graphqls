@@ -1,0 +1,383 @@
+# --- INPUT TYPES ---
+
+input Address {
+  type: String
+  street: String
+  city: String
+  state: String
+  zip: Int
+  country: String
+}
+
+input AddressInput {
+  type: String!
+  street: String!
+  city: String!
+  state: String!
+  zip: Int!
+  country: String!
+}
+
+input BookInput {
+  title: String!
+  author: String!
+  price: Float!
+  imageUrl: String!
+  description: String!
+  ratings: Float
+  sellerId: String!
+}
+
+input CartItemInput {
+  itemId: ID!
+  type: String
+  name: String
+  quantity: Int!
+  price: Float!
+  imageUrl: String!
+}
+
+input ReviewInput {
+  reviewer: String!
+  comment: String!
+  rating: Float!
+  userId: String!
+}
+
+input PaymentInput {
+  cardNumber: String!
+  expiry: String!
+  cvv: String!
+}
+
+input WishlistItemInput {
+  userId: ID!
+  itemId: ID!
+  type: String!
+  name: String!
+  imageUrl: String!
+}
+
+# --- ENTITIES / TYPES ---
+
+type AddressOutput {
+  type: String!
+  street: String!
+  city: String!
+  state: String!
+  zip: Int!
+  country: String!
+}
+
+type AuthResponse {
+  success: Boolean!
+  message: String!
+  user: User
+}
+
+type ResetPasswordResponse {
+  success: Boolean!
+  message: String
+}
+
+type UploadBookResponse {
+  success: Boolean!
+  message: String!
+  book: Book
+}
+
+type UploadHomeItemResponse {
+  success: Boolean!
+  message: String!
+  homeItem: HomeItem
+}
+
+type ResponseMessage {
+  success: Boolean!
+  message: String!
+}
+
+type OrderResponse {
+  success: Boolean!
+  message: String!
+  order: Order
+  reviews: [Review!]
+}
+
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  phone: String
+  firstName: String
+  lastName: String
+  isSeller: Boolean
+  billing: [AddressOutput]
+  shipping: [AddressOutput]
+  primaryBillingIndex: Int
+  primaryShippingIndex: Int
+  profilePictureUrl: String
+}
+
+type Book {
+  id: ID!
+  title: String!
+  type: String
+  author: String!
+  price: Float!
+  imageUrl: String!
+  description: String
+  ratings: Float!
+  sellerId: String
+  totalQuantity: Int
+  reviews: [Review!]
+}
+
+type HomeItem {
+  id: ID!
+  title: String!
+  type: String!
+  description: String!
+  price: Float!
+  imageUrl: String!
+  manufacturer: String!
+  ratings: Float!
+  reviews: [Review!]
+  sellerId: String!
+  totalQuantity: Int!
+}
+
+type CartItem {
+  itemId: ID!
+  type: String
+  name: String
+  quantity: Int
+  price: Float
+  imageUrl: String
+}
+
+type WishlistItem {
+  id: ID!
+  userId: ID!
+  itemId: ID!
+  type: String!
+  name: String!
+  imageUrl: String!
+}
+
+type SoldItem {
+  itemId: ID!
+  type: String!
+  name: String
+  quantity: Int!
+  price: Float!
+  imageUrl: String
+  sellerId: String
+  createdAt: String
+}
+
+type Order {
+  id: ID!
+  userId: ID!
+  items: [CartItem!]!
+  totalPrice: Float!
+  createdAt: String!
+}
+
+type Review {
+  reviewer: String!
+  comment: String!
+  rating: Float!
+  userId: String!
+}
+
+# --- ANALYTICS TYPES ---
+
+type FulfillmentEntry {
+  orderId: ID
+  delayInHours: Float
+}
+
+type RevenueEntry {
+  date: String
+  revenue: Float
+}
+
+type RatingEntry {
+  bookId: ID
+  averageRating: Float
+}
+
+type PurchaseEntry {
+  userId: String
+  frequency: Int
+}
+
+type WishlistEntry {
+  bookId: ID
+  count: Int
+}
+
+type SellerStats {
+  totalBuyers: Int
+  totalPurchases: Int
+  totalRevenue: Float
+  purchasedBooks: [Book]
+  revenueByDate: [RevenueEntry]
+  topSellingBooks: [Book]
+  leastSellingBooks: [Book]
+  averageRatings: [RatingEntry]
+  mostActiveBuyers: [String]
+  userPurchaseFrequency: [PurchaseEntry]
+  cartAbandonmentRate: Float
+  totalOrders: Int
+  orderFulfillmentDelay: [FulfillmentEntry]
+  wishlistFrequency: [WishlistEntry]
+  trendingRecommendations: [Book]
+}
+
+# --- QUERIES ---
+
+type Query {
+  hello: String
+
+  # Books
+  books: [Book!]!
+  book(id: ID!): Book
+  getBooksBySellerId(sellerId: String!): [Book!]!
+
+  # Home Items
+  homeItems: [HomeItem!]!
+  homeItem(id: ID!): HomeItem
+  getHomeItemsBySellerId(sellerId: String!): [HomeItem!]!
+  getSoldItemsBySellerId(sellerId: String!): [SoldItem!]!
+
+  # Cart & Orders
+  cartItems(id: ID!): [CartItem]
+  getOrdersByUserId(userId: ID!): [Order]
+
+  # Wishlist
+  wishlistItems(userId: ID!): [WishlistItem!]!
+  wishlistItem(id: ID!): WishlistItem
+  wishlistCount(userId: ID!): Int!
+
+  # Seller Stats
+  getSellerStatistics(sellerId: ID!): SellerStats
+
+  # Recommendations
+  recommendBooksForUser(userId: ID!): [Book]
+}
+
+# --- MUTATIONS ---
+
+type Mutation {
+  login(username: String!, password: String!): AuthResponse
+
+  signup(
+    username: String!
+    email: String!
+    password: String!
+    firstName: String!
+    lastName: String!
+    phone: String!
+    isSeller: Boolean!
+    billing: [Address]
+    shipping: [Address]
+  ): AuthResponse
+
+  addToCart(userId: ID!, itemId: ID!, type: String!): ResponseMessage!
+  removeFromCart(userId: ID!, itemId: ID, type: String): ResponseMessage!
+
+  createOrder(
+    userId: ID!
+    items: [CartItemInput!]!
+    totalPrice: Float!
+    billing: Address
+    shipping: Address
+    payment: PaymentInput!
+  ): OrderResponse!
+
+  # Book Reviews
+  addReview(bookId: ID!, review: ReviewInput!): Book!
+  updateReview(bookId: ID!, reviewer: String!, updatedReview: ReviewInput!): Book!
+  deleteReview(bookId: ID!, reviewer: String!): Book!
+
+  # HomeItem Reviews
+  addHomeItemReview(homeItemId: ID!, review: ReviewInput!): HomeItem!
+  updateHomeItemReview(homeItemId: ID!, reviewer: String!, updatedReview: ReviewInput!): HomeItem!
+  deleteHomeItemReview(homeItemId: ID!, reviewer: String!): HomeItem!
+
+  # Wishlist
+  addWishlistItem(input: WishlistItemInput!): WishlistItem!
+  updateWishlistItem(input: WishlistItemInput!): WishlistItem!
+  removeWishlistItem(id: ID!): ResponseMessage!
+
+  # Password
+  forgotPassword(email: String!): String
+  resetPassword(token: String!, newPassword: String!): ResetPasswordResponse!
+
+  # Profile
+  updateUser(
+    id: ID!
+    phone: String
+    profilePictureUrl: String
+    billing: [AddressInput]
+    shipping: [AddressInput]
+    primaryBillingIndex: Int
+    primaryShippingIndex: Int
+  ): User
+
+  # Book CRUD
+  uploadBook(
+    title: String!
+    author: String!
+    totalQuantity: Int!
+    price: Float!
+    imageUrl: String!
+    description: String!
+    sellerId: String!
+  ): UploadBookResponse
+
+  updateBook(
+    id: ID!
+    title: String!
+    author: String!
+    totalQuantity: Int!
+    price: Float!
+    imageUrl: String!
+    description: String!
+    sellerId: String!
+  ): UploadBookResponse
+
+  # HomeItem CRUD
+  uploadHomeItem(
+    title: String!
+    description: String!
+    totalQuantity: Int!
+    price: Float!
+    imageUrl: String!
+    manufacturer: String!
+    sellerId: String!
+    type: String!
+  ): UploadHomeItemResponse
+
+  updateHomeItem(
+    id: ID!
+    title: String!
+    description: String!
+    totalQuantity: Int!
+    price: Float!
+    imageUrl: String!
+    manufacturer: String!
+    sellerId: String!
+    type: String!
+  ): UploadHomeItemResponse
+}
+
+# --- SUBSCRIPTIONS (Optional) ---
+
+type Subscription {
+  wishlistItemAdded(userId: ID!): WishlistItem!
+  wishlistItemUpdated(userId: ID!): WishlistItem!
+  wishlistItemRemoved(userId: ID!): ResponseMessage!
+}

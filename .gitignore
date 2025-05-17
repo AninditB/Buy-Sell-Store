@@ -1,0 +1,19 @@
+# Build and dependency folders
+node_modules/
+.cache/
+
+# Editor-related files
+.vscode/
+
+# Lint/cache
+*.eslintcache
+
+# Pack files created by babel loaders
+*.pack
+
+# Logs
+*.log
+
+# Ignore OS/System files
+.DS_Store
+Thumbs.db

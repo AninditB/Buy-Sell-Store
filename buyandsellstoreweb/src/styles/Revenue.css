@@ -1,0 +1,118 @@
+/* Container */
+.revenue-container {
+    padding: 40px;
+    background-color: #f8fafc;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Header */
+  .revenue-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #1a202c;
+  }
+  
+  /* Revenue Card */
+  .revenue-card {
+    background-color: #edf2ff;
+    border-radius: 16px;
+    padding: 25px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 40px;
+  }
+  
+  .revenue-card h2 {
+    margin: 0;
+    font-size: 26px;
+    color: #2d3748;
+  }
+  
+  .revenue-card p {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #718096;
+  }
+  
+  .revenue-amount {
+    font-size: 36px;
+    font-weight: bold;
+    color: #3182ce;
+  }
+  
+  /* Filter Section */
+  .filter-section {
+    margin-bottom: 30px;
+  }
+  
+  .filter-section h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .filter-section input {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+  }
+  
+  .filter-section button {
+    padding: 8px 16px;
+    background-color: #2b6cb0;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .filter-section button:hover {
+    background-color: #2c5282;
+  }
+  
+  /* Items Grid */
+  .items-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .item-card {
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .item-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .item-card h4 {
+    margin: 0;
+    font-size: 18px;
+    color: #2d3748;
+  }
+  
+  .item-card p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #4a5568;
+  }
+
+  .item-card p:last-child {
+    font-size: 13px;
+    color: #718096;
+  }
+  
